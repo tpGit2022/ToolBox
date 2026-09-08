@@ -38,6 +38,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -88,6 +89,7 @@ private fun ToolBoxApp(
     onThemeModeChange: (ThemeMode) -> Unit
 ) {
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
+    val scannerStateHolder = rememberSaveableStateHolder()
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
             PrimaryScrollableTabRow(selectedTabIndex = selectedTab, edgePadding = 0.dp) {
@@ -121,6 +123,11 @@ private fun ToolBoxApp(
                     onClick = { selectedTab = 5 },
                     text = { Text("加密") }
                 )
+                Tab(
+                    selected = selectedTab == 6,
+                    onClick = { selectedTab = 6 },
+                    text = { Text("扫码") }
+                )
             }
             Box(modifier = Modifier.weight(1f)) {
                 when (selectedTab) {
@@ -129,6 +136,9 @@ private fun ToolBoxApp(
                     2 -> Mp3MetadataScreen()
                     3 -> AppearanceScreen(themeMode, onThemeModeChange)
                     4 -> ExifScreen()
+                    6 -> scannerStateHolder.SaveableStateProvider("barcodeScanner") {
+                        BarcodeScannerScreen()
+                    }
                     else -> FileCryptoScreen(fileCryptoViewModel)
                 }
             }
