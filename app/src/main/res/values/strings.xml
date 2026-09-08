@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ToolBox</string>
+    <string name="accessibility_service_name">ToolBox 自动手势</string>
+    <string name="accessibility_service_description">显示悬浮控制器，并按用户配置模拟点击、向上滑动和向下滑动。</string>
+</resources>
