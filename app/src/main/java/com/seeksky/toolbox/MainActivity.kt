@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import com.seeksky.toolbox.ui.theme.ToolBoxTheme
 import com.seeksky.toolbox.ui.theme.ThemeMode
@@ -56,6 +57,7 @@ class MainActivity : ComponentActivity() {
         setTheme(ThemePreferences.activityTheme(initialThemeMode))
         super.onCreate(savedInstanceState)
         val fileCryptoViewModel = ViewModelProvider(this)[FileCryptoViewModel::class.java]
+        val wifiScannerViewModel = ViewModelProvider(this)[WifiScannerViewModel::class.java]
         enableEdgeToEdge()
         setContent {
             var themeMode by remember { mutableStateOf(initialThemeMode) }
@@ -63,6 +65,8 @@ class MainActivity : ComponentActivity() {
                 statusVersion // Recompose after returning from accessibility settings.
                 ToolBoxApp(
                     fileCryptoViewModel = fileCryptoViewModel,
+                    wifiScannerViewModel = wifiScannerViewModel,
+                    lifecycle = lifecycle,
                     themeMode = themeMode,
                     onThemeModeChange = { newMode ->
                         if (newMode != themeMode) {
@@ -85,6 +89,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun ToolBoxApp(
     fileCryptoViewModel: FileCryptoViewModel,
+    wifiScannerViewModel: WifiScannerViewModel,
+    lifecycle: Lifecycle,
     themeMode: ThemeMode,
     onThemeModeChange: (ThemeMode) -> Unit
 ) {
@@ -128,6 +134,11 @@ private fun ToolBoxApp(
                     onClick = { selectedTab = 6 },
                     text = { Text("扫码") }
                 )
+                Tab(
+                    selected = selectedTab == 7,
+                    onClick = { selectedTab = 7 },
+                    text = { Text("Wi-Fi") }
+                )
             }
             Box(modifier = Modifier.weight(1f)) {
                 when (selectedTab) {
@@ -139,6 +150,7 @@ private fun ToolBoxApp(
                     6 -> scannerStateHolder.SaveableStateProvider("barcodeScanner") {
                         BarcodeScannerScreen()
                     }
+                    7 -> WifiScannerScreen(wifiScannerViewModel, lifecycle)
                     else -> FileCryptoScreen(fileCryptoViewModel)
                 }
             }
