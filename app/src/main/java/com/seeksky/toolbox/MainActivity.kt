@@ -29,7 +29,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
-import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import com.seeksky.toolbox.ui.theme.ToolBoxTheme
 import com.seeksky.toolbox.ui.theme.ThemeMode
 import com.seeksky.toolbox.ui.theme.ThemePreferences
@@ -53,12 +54,14 @@ class MainActivity : ComponentActivity() {
         val initialThemeMode = ThemePreferences.load(this)
         setTheme(ThemePreferences.activityTheme(initialThemeMode))
         super.onCreate(savedInstanceState)
+        val fileCryptoViewModel = ViewModelProvider(this)[FileCryptoViewModel::class.java]
         enableEdgeToEdge()
         setContent {
             var themeMode by remember { mutableStateOf(initialThemeMode) }
             ToolBoxTheme(themeMode = themeMode) {
                 statusVersion // Recompose after returning from accessibility settings.
                 ToolBoxApp(
+                    fileCryptoViewModel = fileCryptoViewModel,
                     themeMode = themeMode,
                     onThemeModeChange = { newMode ->
                         if (newMode != themeMode) {
@@ -80,13 +83,14 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun ToolBoxApp(
+    fileCryptoViewModel: FileCryptoViewModel,
     themeMode: ThemeMode,
     onThemeModeChange: (ThemeMode) -> Unit
 ) {
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-            PrimaryTabRow(selectedTabIndex = selectedTab) {
+            PrimaryScrollableTabRow(selectedTabIndex = selectedTab, edgePadding = 0.dp) {
                 Tab(
                     selected = selectedTab == 0,
                     onClick = { selectedTab = 0 },
@@ -112,6 +116,11 @@ private fun ToolBoxApp(
                     onClick = { selectedTab = 4 },
                     text = { Text("EXIF") }
                 )
+                Tab(
+                    selected = selectedTab == 5,
+                    onClick = { selectedTab = 5 },
+                    text = { Text("加密") }
+                )
             }
             Box(modifier = Modifier.weight(1f)) {
                 when (selectedTab) {
@@ -119,7 +128,8 @@ private fun ToolBoxApp(
                     1 -> ReminderScreen()
                     2 -> Mp3MetadataScreen()
                     3 -> AppearanceScreen(themeMode, onThemeModeChange)
-                    else -> ExifScreen()
+                    4 -> ExifScreen()
+                    else -> FileCryptoScreen(fileCryptoViewModel)
                 }
             }
         }
