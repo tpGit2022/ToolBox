@@ -242,7 +242,7 @@ private fun GestureToolScreen() {
                     GesturePreferences.save(context, config)
                     when {
                         !isGestureServiceEnabled(context) -> {
-                            Toast.makeText(context, "请先开启 ToolBox 无障碍服务", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "请先开启百宝匣无障碍服务", Toast.LENGTH_LONG).show()
                             context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                         }
                         !AutoGestureAccessibilityService.showController(config) -> {

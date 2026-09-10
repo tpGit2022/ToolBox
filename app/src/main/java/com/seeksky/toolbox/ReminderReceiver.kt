@@ -134,7 +134,7 @@ class ReminderReceiver : BroadcastReceiver() {
         val channelId = "reminder_${if (sound) "sound" else "silent"}_${if (vibration) "vibrate" else "still"}"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && manager.getNotificationChannel(channelId) == null) {
             val channel = NotificationChannel(channelId, "周期提醒", NotificationManager.IMPORTANCE_HIGH).apply {
-                description = "ToolBox 周期提醒"
+                description = "百宝匣周期提醒"
                 enableVibration(vibration)
                 vibrationPattern = if (vibration) longArrayOf(0, 400, 250, 400) else null
                 if (sound) {

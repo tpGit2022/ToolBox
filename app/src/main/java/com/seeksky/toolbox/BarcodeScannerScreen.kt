@@ -150,7 +150,7 @@ fun BarcodeScannerScreen() {
                                 .setData(Uri.fromParts("package", context.packageName, null))
                         )
                     } catch (_: RuntimeException) {
-                        message = "无法打开应用设置，请手动在系统设置中开启 ToolBox 的相机权限。"
+                        message = "无法打开应用设置，请手动在系统设置中开启百宝匣的相机权限。"
                     }
                 }
             ) {
