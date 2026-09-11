@@ -2,4 +2,6 @@
     <string name="app_name">百宝匣</string>
     <string name="accessibility_service_name">百宝匣 · 自动手势</string>
     <string name="accessibility_service_description">显示悬浮控制器，并按用户配置模拟点击、向上滑动和向下滑动。</string>
+    <string name="nfc_hce_service_description">将百宝匣中设置的文本或网址模拟为只读 NFC NDEF 标签。</string>
+    <string name="nfc_hce_aid_group_description">百宝匣 NDEF 卡模拟</string>
 </resources>

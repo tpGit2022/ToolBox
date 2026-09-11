@@ -59,6 +59,7 @@ class MainActivity : ComponentActivity() {
         val fileCryptoViewModel = ViewModelProvider(this)[FileCryptoViewModel::class.java]
         val wifiScannerViewModel = ViewModelProvider(this)[WifiScannerViewModel::class.java]
         val bluetoothScannerViewModel = ViewModelProvider(this)[BluetoothScannerViewModel::class.java]
+        val nfcViewModel = ViewModelProvider(this)[NfcViewModel::class.java]
         enableEdgeToEdge()
         setContent {
             var themeMode by remember { mutableStateOf(initialThemeMode) }
@@ -68,6 +69,7 @@ class MainActivity : ComponentActivity() {
                     fileCryptoViewModel = fileCryptoViewModel,
                     wifiScannerViewModel = wifiScannerViewModel,
                     bluetoothScannerViewModel = bluetoothScannerViewModel,
+                    nfcViewModel = nfcViewModel,
                     lifecycle = lifecycle,
                     themeMode = themeMode,
                     onThemeModeChange = { newMode ->
@@ -93,6 +95,7 @@ private fun ToolBoxApp(
     fileCryptoViewModel: FileCryptoViewModel,
     wifiScannerViewModel: WifiScannerViewModel,
     bluetoothScannerViewModel: BluetoothScannerViewModel,
+    nfcViewModel: NfcViewModel,
     lifecycle: Lifecycle,
     themeMode: ThemeMode,
     onThemeModeChange: (ThemeMode) -> Unit
@@ -150,6 +153,11 @@ private fun ToolBoxApp(
                 Tab(
                     selected = selectedTab == 9,
                     onClick = { selectedTab = 9 },
+                    text = { Text("NFC") }
+                )
+                Tab(
+                    selected = selectedTab == 10,
+                    onClick = { selectedTab = 10 },
                     text = { Text("魔方") }
                 )
             }
@@ -165,7 +173,8 @@ private fun ToolBoxApp(
                     }
                     7 -> WifiScannerScreen(wifiScannerViewModel, lifecycle)
                     8 -> BluetoothScannerScreen(bluetoothScannerViewModel)
-                    9 -> RubiksCubeScreen()
+                    9 -> NfcScreen(nfcViewModel, lifecycle)
+                    10 -> RubiksCubeScreen()
                     else -> FileCryptoScreen(fileCryptoViewModel)
                 }
             }
