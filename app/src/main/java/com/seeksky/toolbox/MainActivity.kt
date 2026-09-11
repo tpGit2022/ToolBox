@@ -58,6 +58,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val fileCryptoViewModel = ViewModelProvider(this)[FileCryptoViewModel::class.java]
         val wifiScannerViewModel = ViewModelProvider(this)[WifiScannerViewModel::class.java]
+        val bluetoothScannerViewModel = ViewModelProvider(this)[BluetoothScannerViewModel::class.java]
         enableEdgeToEdge()
         setContent {
             var themeMode by remember { mutableStateOf(initialThemeMode) }
@@ -66,6 +67,7 @@ class MainActivity : ComponentActivity() {
                 ToolBoxApp(
                     fileCryptoViewModel = fileCryptoViewModel,
                     wifiScannerViewModel = wifiScannerViewModel,
+                    bluetoothScannerViewModel = bluetoothScannerViewModel,
                     lifecycle = lifecycle,
                     themeMode = themeMode,
                     onThemeModeChange = { newMode ->
@@ -90,6 +92,7 @@ class MainActivity : ComponentActivity() {
 private fun ToolBoxApp(
     fileCryptoViewModel: FileCryptoViewModel,
     wifiScannerViewModel: WifiScannerViewModel,
+    bluetoothScannerViewModel: BluetoothScannerViewModel,
     lifecycle: Lifecycle,
     themeMode: ThemeMode,
     onThemeModeChange: (ThemeMode) -> Unit
@@ -139,6 +142,16 @@ private fun ToolBoxApp(
                     onClick = { selectedTab = 7 },
                     text = { Text("Wi-Fi") }
                 )
+                Tab(
+                    selected = selectedTab == 8,
+                    onClick = { selectedTab = 8 },
+                    text = { Text("蓝牙") }
+                )
+                Tab(
+                    selected = selectedTab == 9,
+                    onClick = { selectedTab = 9 },
+                    text = { Text("魔方") }
+                )
             }
             Box(modifier = Modifier.weight(1f)) {
                 when (selectedTab) {
@@ -151,6 +164,8 @@ private fun ToolBoxApp(
                         BarcodeScannerScreen()
                     }
                     7 -> WifiScannerScreen(wifiScannerViewModel, lifecycle)
+                    8 -> BluetoothScannerScreen(bluetoothScannerViewModel)
+                    9 -> RubiksCubeScreen()
                     else -> FileCryptoScreen(fileCryptoViewModel)
                 }
             }
