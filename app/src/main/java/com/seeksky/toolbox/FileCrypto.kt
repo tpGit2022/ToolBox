@@ -166,7 +166,7 @@ object FileCrypto {
         val metadataSize = locatorBuffer.int
         val magic = ByteArray(8).also(locatorBuffer::get)
         if (!magic.contentEquals(MAGIC)) {
-            throw FileCryptoException("不是 ToolBox 加密文件，或文件尾已损坏；不支持 TheBook 旧格式")
+            throw FileCryptoException("不是百宝匣加密文件（ToolBox v1），或文件尾已损坏；不支持 TheBook 旧格式")
         }
         if (metadataSize !in 1..MAX_METADATA_BYTES || metadataSize > length - TAG_BYTES - 12) invalidFormat()
         val metadataStart = length - 12 - TAG_BYTES - metadataSize
@@ -258,16 +258,16 @@ object FileCrypto {
     private fun decodeMetadata(encoded: ByteArray): FileCryptoMetadata = try {
         DataInputStream(ByteArrayInputStream(encoded)).use { input ->
             val version = input.readInt()
-            if (version != 1) throw FileCryptoException("不支持的加密格式版本 $version，请升级 ToolBox")
+            if (version != 1) throw FileCryptoException("不支持的加密格式版本 $version，请升级百宝匣")
             val algorithmId = input.readInt()
             val algorithm = FileCryptoAlgorithm.entries.firstOrNull { it.id == algorithmId }
-                ?: throw FileCryptoException("不支持的算法编号 $algorithmId，请升级 ToolBox")
+                ?: throw FileCryptoException("不支持的算法编号 $algorithmId，请升级百宝匣")
             val flags = input.readInt()
             val kdf = input.readInt()
             val iterations = input.readInt()
             val chunkBytes = input.readInt()
             if (flags != 1 || kdf != 1 || iterations != KDF_ITERATIONS || chunkBytes != CHUNK_BYTES) {
-                throw FileCryptoException("不支持的加密规则或密钥派生参数，请升级 ToolBox")
+                throw FileCryptoException("不支持的加密规则或密钥派生参数，请升级百宝匣")
             }
             val prefixSize = input.readInt()
             val originalSize = input.readLong()
